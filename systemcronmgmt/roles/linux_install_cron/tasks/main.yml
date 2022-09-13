@@ -1,0 +1,12 @@
+- name: ensure cron management packages installed
+  dnf:
+   name: crontabs, cronie, cronie-anacron
+   state: present
+
+- name: ensure crond service is running and enabled
+  service:
+    name: crond
+    state: started
+    enabled: yes
+    
+   

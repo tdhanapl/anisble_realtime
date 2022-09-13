@@ -1,0 +1,37 @@
+---
+- name: Install kubernetes tools
+  hosts: kubernetes
+  become: true
+  become_user: root
+  tasks:
+  - name: Copy the kubernetes repository file
+    copy:
+      src: /home/admin/middleware/stack/ansible/playbooks/kubernetes_setup/kubernetes.repo 
+      dest: /etc/yum.repos.d/kubernetes.repo
+  - name: Set SELinux in permissive mode
+    selinux:
+      policy: targeted
+      state: permissive
+  - name: Install kubeadm, kubectl and kubelet 
+    dnf:
+      name: '{{ item }}'
+      state: present
+      disable_excludes: kubernetes
+    with_items:
+      - kubeadm
+      - kubectl
+      - kubelet
+  - name: Enable and Start kubelet service
+    service:
+      name: kubelet
+      state: started
+      enabled: yes
+  - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+    shell: |
+      swapoff -a
+      sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+  - name: Disable zram specific to fedora
+    dnf:
+      name: zram-generator-defaults
+      state: absent
+

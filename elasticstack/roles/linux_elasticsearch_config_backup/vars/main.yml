@@ -1,0 +1,3 @@
+---
+elasticsearch_config: "/etc/elasticsearch"
+elasticsearch_config_backup: "/mnt/backups"

@@ -1,0 +1,5 @@
+- name: set system locale
+  shell: localectl set-locale LANG="{{ locale }}"
+
+- name: set x11 and virtual console keymap
+  shell: localectl set-x11-keymap "{{ map }}"

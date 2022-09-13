@@ -1,0 +1,7 @@
+---
+- name: system security management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_file_integrity_scan'}

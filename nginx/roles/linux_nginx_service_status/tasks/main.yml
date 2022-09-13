@@ -1,0 +1,6 @@
+- name: check nginx service status
+  service_facts:
+
+- name: print nginx service status
+  debug:
+    var: ansible_facts.services['nginx.service']['state']

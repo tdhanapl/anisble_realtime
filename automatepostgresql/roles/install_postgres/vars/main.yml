@@ -1,0 +1,3 @@
+---
+postgres_rpm_repository: https://download.postgresql.org/pub/repos/yum/reporpms/F-34-x86_64/pgdg-fedora-repo-latest.noarch.rpm
+postgres_db_version: 14

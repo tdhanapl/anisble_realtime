@@ -1,0 +1,6 @@
+- name: dnf transaction redo
+  shell: dnf history redo "{{ transactionID }}" -y
+  register: transundo_output
+
+- name: print transaction redo output
+  debug: msg="{{ transundo_output }}"

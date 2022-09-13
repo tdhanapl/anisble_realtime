@@ -1,0 +1,10 @@
+---
+- name: linuxn apache server management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_apache_stop_server'}
+  - {role: 'linux_apache_config_backup'}
+  - {role: 'linux_apache_start_server'}
+  - {role: 'linux_apache_service_status'}

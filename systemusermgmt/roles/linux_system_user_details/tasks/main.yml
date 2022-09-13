@@ -1,0 +1,17 @@
+- name: get linux user password age and settings
+  shell: chage -l "{{ item }}"
+  with_items:
+  - "{{ userlist }}"
+  register: userdata_output
+
+- name: print linux user password age and settings
+  debug: msg="{{ userdata_output | json_query('results[*].stdout_lines') }}"
+
+- name: get linux user and group details
+  shell: id "{{ item }}"
+  with_items:
+  - "{{ userlist }}"
+  register: groupdata_output
+
+- name: print linux user and group details
+  debug: msg="{{ groupdata_output | json_query('results[*].stdout_lines') }}"

@@ -1,0 +1,3 @@
+---
+cronjob_scripts_loc: "/data/scripts"
+user: "test"

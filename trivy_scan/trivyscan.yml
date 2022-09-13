@@ -1,0 +1,33 @@
+---
+- name: Trivy install and configure
+  hosts: kubernetesmaster
+  become: true
+  become_user: root
+  tasks:
+  - name: Copy the trivy repository file to managed node
+    copy:
+      src: /home/admin/middleware/stack/ansible/playbooks/trivy_scan/trivy.repo
+      dest: /etc/yum.repos.d/trivy.repo
+      owner: root
+      group: root
+      mode: 0755
+#  - name: Update packages
+#    dnf: 
+#      name=* 
+#      state=present
+  - name: Install Trivy package
+    dnf:
+      name=trivy
+      state=present
+  - name: Copy Trivy scan script
+    copy:
+      src: /home/admin/middleware/stack/ansible/playbooks/trivy_scan/trivyscan.sh
+      dest: /var/tmp/trivyscan.sh
+      mode: 0755
+    become: true
+    become: admin
+  - name: Scan container images
+    shell: /var/tmp/trivyscan.sh
+    become: true
+    become_user: admin
+      

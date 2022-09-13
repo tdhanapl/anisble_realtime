@@ -1,0 +1,5 @@
+- name: selinxu allow http port
+  shell: semanage port -a -t http_port_t -p tcp {{ apache_http_port }}
+
+- name: selinxu allow https port
+  shell: semanage port -a -t http_port_t -p tcp {{ apache_https_port }}

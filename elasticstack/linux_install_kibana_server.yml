@@ -1,0 +1,7 @@
+---
+- name: kibana management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_install_kibana_server'}

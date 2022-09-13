@@ -1,0 +1,17 @@
+---
+- name: Creating user roles and database
+  hosts: all
+  tasks:
+  - name: Connect to default database and create a user with super prvileges
+    postgresql_user:
+      name: dbadmintest
+      password: dbadmintest1234
+      role_attr_flags: CREATEDB,SUPERUSER,CREATEROLE,LOGIN
+  - name: Create a new database with name "testdatabase"
+    postgresql_db:
+      login_host: 192.168.122.234
+      login_user: dbadmintest
+      login_password: dbadmintest1234
+      port: 5432
+      name: testdatabase1234
+

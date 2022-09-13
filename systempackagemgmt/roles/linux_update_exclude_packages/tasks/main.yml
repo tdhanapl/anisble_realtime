@@ -1,0 +1,9 @@
+- name: linux system management
+  shell: yum update --exclude=java* --exclude=tzdata* -y
+
+- name: get kernel packages
+  shell: rpm -qa | grep kernel
+  register: kernel_packages
+
+- name: print kernel packages
+  debug: msg="{{ kernel_packages.stdout_lines }}"

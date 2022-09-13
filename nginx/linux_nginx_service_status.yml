@@ -1,0 +1,7 @@
+---
+- name: linux nginx service management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_nginx_service_status'}

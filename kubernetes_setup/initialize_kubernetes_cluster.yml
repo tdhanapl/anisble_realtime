@@ -1,0 +1,13 @@
+---
+- name: Install kubernetes tools
+  hosts: fedkubemaster
+  become: true
+  become_user: root
+  tasks:
+  - name: Initialize kubernetes cluster
+    shell: |
+      kubeadm init --pod-network-cidr=10.244.0.0/16
+    register: init_output
+  - name: Print the initialization output
+    debug: msg="{{ init_output }}"
+    

@@ -1,0 +1,40 @@
+---
+- name: Configure the PostgreSQL RPM repository
+  dnf:
+    name: '{{ postgres_rpm_repository }}'
+    state: present
+
+- name: Install PostgreSQL server
+  dnf:
+    name: postgresql{{ postgres_db_version }}-server
+    state: present
+
+- name: Check if Database is initialized
+  stat:
+    path: /var/lib/pgsql/{{ postgres_db_version }}/data/pg_hba.conf
+  register: result
+
+- name: Initialize the database
+  shell: /usr/pgsql-{{ postgres_db_version }}/bin/postgresql-{{ postgres_db_version }}-setup initdb
+  when: not result.stat.exists
+
+- name: Allow remote connection to PostgreSQL database
+  copy:
+    src: pg_hba.conf
+    dest: /var/lib/pgsql/{{ postgres_db_version }}/data/
+
+- name: Allow PostgreSQL to listen on all interfaces
+  copy:
+    src: postgresql.conf
+    dest: /var/lib/pgsql/{{ postgres_db_version }}/data/
+
+- name: Start the database service
+  service:
+    name: postgresql-{{ postgres_db_version }}
+    state: started
+
+- name: Allow PostgreSQL database service
+  firewalld:
+    service: postgresql
+    permanent: yes
+    state: enabled

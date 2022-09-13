@@ -1,0 +1,10 @@
+---
+- name: kibana management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_kibana_stop_server'}
+  - {role: 'linux_kibana_config_backup'}
+  - {role: 'linux_kibana_config_update'}
+  - {role: 'linux_kibana_start_server'}

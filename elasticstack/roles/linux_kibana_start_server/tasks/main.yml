@@ -1,0 +1,4 @@
+- name: ensure kibana service is up and running
+  service:
+    name: kibana
+    state: started

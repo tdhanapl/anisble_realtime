@@ -1,0 +1,42 @@
+- name: ensure aide package installed for file integrity check
+  dnf:
+    name: aide
+    state: present
+
+- name: check if aide database exists
+  stat: 
+    path: /var/lib/aide/aide.db.gz
+  register: aidedb
+
+- name: print aidedb status
+  debug: msg="{{ aidedb.stat.exists }}" 
+
+- name: initialize aide database
+  shell: aide --init
+  when: aidedb.stat.exists == false
+
+- name: move the database
+  shell: mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+  when: aidedb.stat.exists == false
+
+- name: ensure aide reports directory exists
+  file:
+    name: /data/aide
+    state: directory
+
+- name: ensure scripts directory exists
+  file:
+    name: /data/scripts
+    state: directory
+
+- name: copy aide check script
+  copy:
+    src: aidecheck.sh
+    dest: /data/scripts/
+
+- name: create crontab for file integrity check
+  cron:
+    name: aide file integrity check
+    minute: "0"
+    hour: "5"
+    job: /data/scripts/aidecheck.sh 2>&1

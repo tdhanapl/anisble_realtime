@@ -1,0 +1,3 @@
+---
+metricbeat_config: "/etc/metricbeat"
+metricbeat_config_backup: "/mnt/backups"

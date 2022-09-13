@@ -1,0 +1,4 @@
+- name: ensure kibana service is stopped
+  service:
+    name: kibana
+    state: stopped

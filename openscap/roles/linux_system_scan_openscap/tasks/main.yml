@@ -1,0 +1,32 @@
+- name: ubuntu name
+  command: lsb_release -cs
+  register: rel
+
+- name: install openscap-scanner
+  apt:
+    name: libopenscap8
+    state: present
+
+- name: validate installation
+  shell: oscap --version | grep "command line tool"
+  register: oscap_version
+  
+- name: print oscap version
+  debug: msg="{{ oscap_version.stdout }}"
+  
+- name: print ubuntu release
+  debug: msg={{ rel.stdout }}
+  
+- name: ensure openscap system scan script copied
+  copy:
+    src: openscap_scan.sh
+    dest: /var/tmp/openscap_scan.sh
+    mode: 0755
+  
+- name: linux system scan using openscap for vulnerability check
+  shell: /var/tmp/openscap_scan.sh
+
+
+
+ 
+

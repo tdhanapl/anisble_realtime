@@ -1,0 +1,4 @@
+- name: update apache httpd config
+  template:
+    src: "httpd.conf.j2"
+    dest: "{{ httpd_config_root}}/httpd.conf"

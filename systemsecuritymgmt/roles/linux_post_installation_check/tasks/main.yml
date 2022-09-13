@@ -1,0 +1,10 @@
+- name: ensure firewalld service is running
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: ensure print service cups not installed
+  dnf:
+    name: cups
+    state: absent

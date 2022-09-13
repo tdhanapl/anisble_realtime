@@ -1,0 +1,4 @@
+- name: ensure metricbeat service is running
+  service:
+    name: metricbeat
+    state: started

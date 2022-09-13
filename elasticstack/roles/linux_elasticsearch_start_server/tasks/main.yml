@@ -1,0 +1,18 @@
+- name: ensure elasticsearch started
+  service:
+    name: elasticsearch
+    state: started
+    enabled: no
+
+- name: validate elasticsearch service
+  uri:
+    url: "{{ elasticsearch_url }}"
+    user: elastic
+    password: ifcyGR*4EKlz9*XWj*Fv
+    method: GET
+    #ca_path: "{{ elasticsearch_ca_cert }}"
+    validate_certs: no
+  register: escheck_output
+
+- name: print elasticsearch check output
+  debug: msg="{{ escheck_output.json }}"

@@ -1,0 +1,6 @@
+- name: important note
+  debug: msg="If you use NTP, the hardware clock is automatically synchronized to the system clock every 11 minutes, Also it is recommended to keep the hardware clock in UTC"
+
+- name: sync hardware clock with system time in utc
+  shell: hwclock --systohc --utc
+  register: hwclock_output

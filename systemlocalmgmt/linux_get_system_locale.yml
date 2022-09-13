@@ -1,0 +1,5 @@
+---
+- name: system locale management
+  hosts: sandbox
+  roles:
+  - { role: 'linux_get_system_locale' }

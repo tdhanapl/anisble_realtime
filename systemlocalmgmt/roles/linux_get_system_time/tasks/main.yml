@@ -1,0 +1,13 @@
+- name: get system time
+  shell: timedatectl
+  register: time_output
+
+- name: print system time
+  debug: msg="{{ time_output.stdout_lines }}"
+
+- name: list timezones
+  shell: timedatectl list-timezones
+  register: timezones_output
+
+- name: print timezones list
+  debug: msg="{{ timezones_output.stdout_lines }}"

@@ -1,0 +1,18 @@
+- name: configure elasticsearch
+  template:
+    src: "metricbeat.yml.j2"
+    dest: /etc/metricbeat/metricbeat.yml
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: enable linux metrics module
+  shell: metricbeat modules enable linux
+
+- name: ensure kibana is running
+  service:
+    name: kibana
+    state: started
+
+- name: setup metribeat assets
+  shell: metricbeat setup -e

@@ -1,0 +1,7 @@
+- name: gather the package facts
+  package_facts:
+    manager: auto
+
+- name: print the package facts
+  debug: 
+    var: ansible_facts.packages

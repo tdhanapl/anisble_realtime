@@ -1,0 +1,4 @@
+- name: ensure logstash service is running
+  service:
+    name: logstash
+    state: started

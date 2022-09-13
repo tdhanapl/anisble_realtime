@@ -1,0 +1,6 @@
+- name: check kibana service status
+  service_facts:
+
+- name: print kibana service status
+  debug:
+    var: ansible_facts.services['kibana.service']['state']

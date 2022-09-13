@@ -1,0 +1,5 @@
+---
+elasticsearch_port: 9200
+elasticsearch_host: fedser36.stack.com
+#elasticsearch_ca_cert: /etc/elasticsearch/certs/http_ca.crt
+elasticsearch_url: https://fedser36.stack.com:9200

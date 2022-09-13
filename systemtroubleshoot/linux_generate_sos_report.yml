@@ -1,0 +1,8 @@
+---
+- name: system troubleshooting and analysis
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+    - { role: 'linux_generate_sos_report' } 
+

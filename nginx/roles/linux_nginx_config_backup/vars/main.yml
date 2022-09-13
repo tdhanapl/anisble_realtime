@@ -1,0 +1,3 @@
+---
+nginx_config: "/etc/nginx"
+nginx_config_backup: "/mnt/backups"

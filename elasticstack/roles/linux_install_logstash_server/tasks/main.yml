@@ -1,0 +1,15 @@
+- name: import elasticsearch gpg key
+  shell: rpm --import "{{ elasticsearch_gpg_key }}"
+
+- name: configure logstash repository
+  copy:
+    src: "logstash.repo"
+    dest: /etc/yum/repos.d/
+
+- name: enable logstash repository
+  shell: dnf config-manager --set-enabled logstash-8.x
+
+- name: ensure logstash installed
+  dnf:
+    name: logstash
+    state: present

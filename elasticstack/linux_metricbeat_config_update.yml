@@ -1,0 +1,11 @@
+---
+- name: metricbeat management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_metricbeat_config_backup'}
+  - {role: 'linux_elasticsearch_start_server'}
+  - {role: 'linux_kibana_start_server'}
+  - {role: 'linux_metricbeat_config_update'}
+  - {role: 'linux_metricbeat_start_server'}

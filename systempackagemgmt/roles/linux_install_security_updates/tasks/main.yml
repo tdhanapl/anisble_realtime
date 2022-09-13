@@ -1,0 +1,9 @@
+- name: install security updates only
+  dnf:
+    name: "*"
+    state: latest
+    security: yes
+  register: securityupdate_output
+
+- name: print security updates
+  debug: msg="{{ securityupdate_output }}"

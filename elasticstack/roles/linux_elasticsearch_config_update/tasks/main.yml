@@ -1,0 +1,36 @@
+- name: copy the elasticsearch config
+  template:
+    src: "elasticsearch.yml.j2"
+    dest: "/etc/elasticsearch/elasticsearch.yml"
+    owner: root
+    group: elasticsearch
+    mode: '0660'
+
+- name: reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: ensure elasticsearch service is running
+  service:
+    name: elasticsearch
+    state: started
+
+- name: allow elasticsearch port
+  firewalld:
+    port: "{{ elasticsearch_port }}/tcp"
+    permanent: yes
+    state: enabled
+    immediate: true
+
+- name: validate elasticsearch service
+  uri:
+    url: "{{ elasticsearch_url }}"
+    user: elastic
+    password: ifcyGR*4EKlz9*XWj*Fv
+    method: GET
+    #ca_path: "{{ elasticsearch_ca_cert }}"
+    validate_certs: no
+  register: escheck_output
+
+- name: print elasticsearch check output
+  debug: msg="{{ escheck_output.json }}"

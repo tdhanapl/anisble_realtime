@@ -1,0 +1,7 @@
+---
+- name: system timezone management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_set_system_timezone'}

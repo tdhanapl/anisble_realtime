@@ -1,0 +1,7 @@
+---
+- name: system selinux management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_selinux_allow_port'}

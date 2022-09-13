@@ -1,0 +1,3 @@
+---
+logstash_config: "/etc/logstash"
+logstash_config_backup: "/mnt/backups"

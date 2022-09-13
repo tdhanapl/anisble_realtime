@@ -1,0 +1,8 @@
+- name: notify on system user password expiry
+  script: passexpirynotify.sh "{{ item }}"
+  with_items:
+  - "{{ users }}"
+  register: expiry_output
+
+- name: print the expiry notification
+  debug: msg="{{ expiry_output | json_query('results[*].stdout_lines')}}"

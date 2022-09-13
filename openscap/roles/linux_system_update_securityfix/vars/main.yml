@@ -1,0 +1,5 @@
+---
+securityfix_package_updates:    
+- linux-image-5.13.0-1019-aws
+- linux-image-aws
+- linux-aws

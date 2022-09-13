@@ -1,0 +1,20 @@
+---
+- name: install sos package and dependencies
+  dnf:
+    name: sos
+    state: present
+
+- name: create reports directory
+  file:
+    path: "{{ report_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: generate sos report
+  shell: /usr/sbin/sos report
+        {% for arg in report_args %}
+        {{ arg }}
+        {% endfor %} 
+        --tmp-dir "{{ report_dir }}" --case-id "{{ report_case }}"
+
+

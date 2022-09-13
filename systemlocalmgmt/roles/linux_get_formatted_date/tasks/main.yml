@@ -1,0 +1,20 @@
+- name: get date in date, time and timezone format
+  shell: date +"%F_%T_%Z"
+  register: date_output
+
+- name: print formatted date
+  debug: msg="{{ date_output.stdout }}"
+
+- name: get default date in utc
+  shell: date --utc
+  register: date_utc_output
+
+- name: print default date in utc format
+  debug: msg="{{ date_utc_output.stdout }}"
+
+- name: get default date
+  shell: date
+  register: date_output
+
+- name: print default date in utc format
+  debug: msg="{{ date_output.stdout }}"

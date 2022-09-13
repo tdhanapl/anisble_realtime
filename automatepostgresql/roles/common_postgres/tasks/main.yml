@@ -1,0 +1,11 @@
+---
+- name: Get Distrubution
+  debug: msg={{ ansible_distribution }}
+  register: dist
+
+- name: Print Distribution 
+  debug: msg={{ dist }}
+
+- name: Update packages
+  yum: name=* state=latest
+

@@ -1,0 +1,49 @@
+- name: import elasticsearch gpg key
+  shell: rpm --import "{{ elasticsearch_gpg_key }}"
+
+- name: configure kibana repository
+  copy:
+    src: "kibana.repo"
+    dest: /etc/yum/repos.d/
+
+- name: enable elasticsearch repository
+  shell: dnf config-manager --set-enabled kibana-8.x
+
+- name: ensure kibana installed
+  dnf:
+    name: kibana
+    state: present
+  register: kibana_output
+
+- name: ensure elasticsearch service is running
+  service:
+    name: elasticsearch
+    state: started
+
+- name: generate enrollment token for kibana
+  shell: /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
+  register: kibana_token
+
+- name: print kibana enrollment token
+  debug: msg="{{ kibana_token.stdout }}"
+
+- name: enroll kibana with elasticsearch
+  shell: /usr/share/kibana/bin/kibana-setup --enrollment-token {{ kibana_token.stdout }}
+  register: kibana_enrollment
+
+- name: print kibana enrollment output
+  debug: msg="{{ kibana_enrollment }}"
+
+- name: reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: print kibana installation output
+  debug: msg="{{ kibana_output }}"
+
+- name: allow kibana port
+  firewalld:
+    port: "{{ kibana_port }}/tcp"
+    permanent: yes
+    state: enabled
+    immediate: true

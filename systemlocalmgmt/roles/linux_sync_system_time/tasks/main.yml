@@ -1,0 +1,2 @@
+- name: sync system time with ntp server
+  shell: timedatectl set-ntp "{{ sync_time_with_ntp }}"

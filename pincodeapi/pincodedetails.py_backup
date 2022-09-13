@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+
+import requests
+
+url = "https://pincode.p.rapidapi.com/"
+
+payload = "{\n    \"searchBy\": \"pincode\",\n    \"value\": 400018\n}"
+headers = {
+    'content-type': "application/json",
+    'x-rapidapi-key': "2a4940fac9msha85bed4cc1c0f92p13c187jsn351142a50d3c",
+    'x-rapidapi-host': "pincode.p.rapidapi.com"
+    }
+
+response = requests.request("POST", url, data=payload, headers=headers)
+
+print(response.text)

@@ -1,0 +1,6 @@
+- name: list system units
+  shell: systemctl list-units
+  register: units_output
+
+- name: print system units list
+  debug: msg="{{ units_output.stdout_lines }}"

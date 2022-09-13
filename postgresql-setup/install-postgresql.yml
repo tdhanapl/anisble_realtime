@@ -1,0 +1,56 @@
+---
+- name: Postgre SQL Database installation and configuration
+  hosts: all
+  become: true
+  become_user: root
+  tasks:
+  - name: Get the OS platform
+    command: cat /etc/redhat-release
+    register: redhatRelease
+
+  - name: Print the redhat-release
+    debug: msg={{ redhatRelease.stdout }}
+
+#  - name: Update packages
+#    yum: name=* state=present
+
+  - name: Configure the PostgreSQL RPM repository
+    dnf:
+      name: "https://download.postgresql.org/pub/repos/yum/reporpms/F-34-x86_64/pgdg-fedora-repo-latest.noarch.rpm"
+      state: present
+
+  - name: Install PostgreSQL server
+    dnf:
+      name: postgresql14-server
+      state: present
+
+  - name: Check if Database is initialized
+    stat:
+      path: /var/lib/pgsql/14/data/pg_hba.conf
+    register: result
+
+  - name: Initialize the database
+    shell: /usr/pgsql-14/bin/postgresql-14-setup initdb
+    when: not result.stat.exists
+
+  - name: Allow remote connection to PostgreSQL database
+    copy:
+      src: /home/admin/middleware/stack/ansible/playbooks/postgresql-setup/pg_hba.conf
+      dest: /var/lib/pgsql/14/data/
+
+  - name: Allow PostgreSQL to listen on all interfaces
+    copy:
+      src: /home/admin/middleware/stack/ansible/playbooks/postgresql-setup/postgresql.conf
+      dest: /var/lib/pgsql/14/data/
+
+  - name: Start the database service
+    service:
+      name: postgresql-14
+      state: started
+
+  - name: Allow PostgreSQL database service
+    firewalld:
+      service: postgresql
+      permanent: yes
+      state: enabled
+

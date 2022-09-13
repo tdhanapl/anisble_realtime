@@ -1,0 +1,6 @@
+- name: reset elastic user password
+  shell: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic --batch
+  register: elasticuser_output
+
+- name: print elasticuser output
+  debug: msg="{{ elasticuser_output.stdout_lines }}"

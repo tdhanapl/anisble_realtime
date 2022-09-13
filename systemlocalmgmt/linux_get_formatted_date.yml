@@ -1,0 +1,5 @@
+---
+- name: system date formatting
+  hosts: sandbox
+  roles:
+  - {role: 'linux_get_formatted_date'}

@@ -1,0 +1,44 @@
+- name: ensure http package is installed
+  dnf: 
+    name: httpd
+    state: present
+
+- name: copy the httpd.conf template
+  template:
+    src: "httpd.conf.j2"
+    dest: "/etc/httpd/conf/httpd.conf"
+
+- name: ensure http service is enabled and running
+  service: 
+    name: httpd 
+    state: started 
+    enabled: yes
+
+- name: enable http service in firewall
+  firewalld: 
+    service: http 
+    permanent: yes 
+    state: enabled 
+    immediate: true
+
+- name: allow apache http port
+  firewalld:
+    port: "{{ apache_http_port }}/tcp"
+    permanent: yes
+    state: enabled
+    immediate: true
+
+- name: copy html file to httpd docroot
+  copy: 
+    src: "static"
+    dest: "/var/www/html/"
+#    src: "{{ item }}"
+#    dest: /var/www/html/
+#  with_fileglob: "files/static/*"
+
+
+#  - name: Copy html file to httpd docroot
+#    copy: 
+#      src: "{{ item }}"
+#      dest: /var/www/html/
+#    with_fileglob: "/home/admin/learnansible/apachehttpd/static/data-*" 

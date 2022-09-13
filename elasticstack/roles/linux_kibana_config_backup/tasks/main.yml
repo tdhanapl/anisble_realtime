@@ -1,0 +1,12 @@
+- name: ensure backup directory present
+  file: 
+    path: "{{ kibana_config_backup }}"
+    state: directory
+    mode: '0755'
+
+- name: ensure kibana config backup
+  shell: rsync -r "{{ kibana_config }}" "{{ kibana_config_backup }}"
+
+- name: ensure backup compressed
+  shell: cd "{{ kibana_config_backup }}"; tar -czvf "{{ kibana_config_backup }}"/kibana_$(date +%F_%H_%M_%Z).tar.gz kibana
+

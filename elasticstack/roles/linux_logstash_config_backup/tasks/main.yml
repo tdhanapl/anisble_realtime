@@ -1,0 +1,12 @@
+- name: ensure backup directory present
+  file: 
+    path: "{{ logstash_config_backup }}"
+    state: directory
+    mode: '0755'
+
+- name: ensure logstash config backup
+  shell: rsync -r "{{ logstash_config }}" "{{ logstash_config_backup }}"
+
+- name: ensure backup compressed
+  shell: cd "{{ logstash_config_backup }}"; tar -czvf "{{ logstash_config_backup }}"/logstash_$(date +%F_%H_%M_%Z).tar.gz logstash
+

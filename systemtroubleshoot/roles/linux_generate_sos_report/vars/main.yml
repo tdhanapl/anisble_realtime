@@ -1,0 +1,8 @@
+---
+report_dir: '/var/tmp/reports'
+report_case: 'test'
+report_args:
+  - --all-logs
+  - --batch
+  - --quiet
+  - --verify

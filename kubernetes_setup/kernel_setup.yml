@@ -1,0 +1,25 @@
+---
+- name: Module and Kernel Parameter setup
+  hosts: kubernetes
+  become: true
+  become_user: root
+  vars:
+    sysctl_config:
+      net.bridge.bridge-nf-call-iptables: 1
+      net.bridge.bridge-nf-call-ip6tables: 1
+      net.ipv4.ip_forward: 1
+  tasks:
+    - name: Load bridge network filter and overlay modprobe module
+      modprobe:
+        name: '{{ item }}'
+        state: present
+      with_items:
+        - br_netfilter
+        - overlay
+    - name: Update sysctl parameters
+      sysctl:
+        name: '{{ item.key }}'
+        value: '{{ item.value }}'
+        state: present
+        reload: yes
+      with_dict: '{{ sysctl_config }}'

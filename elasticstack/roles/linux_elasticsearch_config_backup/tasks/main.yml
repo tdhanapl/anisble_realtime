@@ -1,0 +1,12 @@
+- name: ensure backup directory present
+  file: 
+    path: "{{ elasticsearch_config_backup }}"
+    state: directory
+    mode: '0755'
+
+- name: ensure elasticsearch config backup
+  shell: rsync -r "{{ elasticsearch_config }}" "{{ elasticsearch_config_backup }}"
+
+- name: ensure backup compressed
+  shell: cd "{{ elasticsearch_config_backup }}"; tar -czvf "{{ elasticsearch_config_backup }}"/elasticsearch_$(date +%F_%H_%M_%Z).tar.gz elasticsearch
+

@@ -1,0 +1,16 @@
+---
+- hosts: stack
+  remote_user: admin
+  tasks:
+    - name: Download the prometheus package
+      get_url:
+        url: https://github.com/prometheus/prometheus/releases/download/v2.26.0/prometheus-2.26.0.linux-amd64.tar.gz
+        dest: /home/admin/Downloads/prometheus-2.26.0.linux-amd64.tar.gz
+        mode: 0755
+    - name: Extract the package
+      unarchive:
+        src: /home/admin/Downloads/prometheus-2.26.0.linux-amd64.tar.gz
+        dest: /home/admin/Downloads/
+    - name: Start the Prometheus service
+      shell: /home/admin/Downloads/prometheus-2.26.0.linux-amd64/prometheus --config.file /home/admin/Downloads/prometheus-2.26.0.linux-amd64/prometheus.yml &
+

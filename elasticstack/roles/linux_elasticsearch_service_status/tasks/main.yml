@@ -1,0 +1,6 @@
+- name: check elasticsearch service status
+  service_facts:
+
+- name: print elasticsearch service status
+  debug:
+    var: ansible_facts.services['elasticsearch.service']['state']

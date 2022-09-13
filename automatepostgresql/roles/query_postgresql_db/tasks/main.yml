@@ -1,0 +1,31 @@
+- name: Run SQL query to capture database version
+  postgresql_query:
+    login_host: '{{ postgres_db_host }}'
+    login_user: '{{ postgres_user }}'
+    login_password: '{{ postgres_user_password }}'
+    port: '{{ postgres_port }}'
+    db: '{{ postgres_db_name }}'
+    query: SELECT version()
+  register: ver
+
+- name: Print the version
+  debug: msg={{ ver }}
+
+- name: Copy SQL script to provision the database
+  copy:
+    src: provisionpgdatabase.sql
+    dest: /tmp/provisionpgdatabase.sql
+
+- name: Run SQL script to provision the database
+  postgresql_query:
+    login_host: '{{ postgres_db_host }}'
+    login_user: '{{ postgres_user }}'
+    login_password: '{{ postgres_user_password }}'
+    port: '{{ postgres_port }}'
+    db: '{{ postgres_db_name }}'
+    #path_to_script: "{{ role_path }}/files/provisionpgdatabase.sql"
+    path_to_script: /tmp/provisionpgdatabase.sql
+  register: ver
+
+- name: Print the version
+  debug: msg={{ ver }}

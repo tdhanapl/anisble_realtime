@@ -1,0 +1,7 @@
+---
+- name: logstash management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_install_logstash_server'}

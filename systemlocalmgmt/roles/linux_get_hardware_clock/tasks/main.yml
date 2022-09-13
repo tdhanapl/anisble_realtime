@@ -1,0 +1,6 @@
+- name: get hardware clock
+  shell: hwclock
+  register: hwclock_output
+
+- name: print hardware clock
+  debug: msg="{{ hwclock_output.stdout }}"

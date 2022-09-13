@@ -1,0 +1,10 @@
+---
+- name: linuxn nginx server management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - { role: 'linux_nginx_stop_server' }
+  - { role: 'linux_nginx_config_backup' }
+  - { role: 'linux_nginx_start_server' }
+  - {role: 'linux_nginx_service_status'}

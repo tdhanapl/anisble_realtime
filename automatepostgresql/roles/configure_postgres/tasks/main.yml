@@ -1,0 +1,11 @@
+---
+- name: Allow remote connection to PostgreSQL database
+  copy:
+    src: /home/admin/middleware/stack/ansible/playbooks/postgresql-setup/pg_hba.conf
+    dest: /var/lib/pgsql/14/data/
+
+- name: Allow PostgreSQL to listen on all interfaces
+  copy:
+    src: /home/admin/middleware/stack/ansible/playbooks/postgresql-setup/postgresql.conf
+    dest: /var/lib/pgsql/14/data/
+

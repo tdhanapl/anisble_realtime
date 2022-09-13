@@ -1,0 +1,6 @@
+- name: kibana service management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_kibana_stop_server'}

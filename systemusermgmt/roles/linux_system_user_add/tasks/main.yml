@@ -1,0 +1,8 @@
+- name: add linux user
+  script: addusers.sh "{{ item }}"
+  with_items:
+  - "{{ users }}"
+  register: addusers_output
+
+- name: print the addusers results
+  debug: msg="{{ addusers_output }}"

@@ -1,0 +1,12 @@
+- name: ensure backup directory present
+  file: 
+    path: "{{ metricbeat_config_backup }}"
+    state: directory
+    mode: '0755'
+
+- name: ensure metricbeat config backup
+  shell: rsync -r "{{ metricbeat_config }}" "{{ metricbeat_config_backup }}"
+
+- name: ensure backup compressed
+  shell: cd "{{ metricbeat_config_backup }}"; tar -czvf "{{ metricbeat_config_backup }}"/metricbeat_$(date +%F_%H_%M_%Z).tar.gz metricbeat
+

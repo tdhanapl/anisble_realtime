@@ -1,0 +1,7 @@
+---
+- name: system time management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_sync_system_time'}

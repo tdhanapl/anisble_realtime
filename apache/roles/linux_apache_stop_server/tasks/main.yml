@@ -1,0 +1,5 @@
+- name: ensure http service is stopped and disabled
+  service: 
+    name: httpd 
+    state: stopped 
+    enabled: no

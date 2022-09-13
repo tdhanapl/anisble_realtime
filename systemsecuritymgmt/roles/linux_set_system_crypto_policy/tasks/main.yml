@@ -1,0 +1,6 @@
+- name: get the current crypto policy applied to system
+  shell: update-crypto-policies --set "{{ crypto_policy }}"
+  register: cryptopolicy_output
+
+- name: print current crypto policy applied to system
+  debug: msg="{{ cryptopolicy_output.stdout }}"

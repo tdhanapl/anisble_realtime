@@ -1,0 +1,16 @@
+---
+- name: Join the worker node
+  hosts: fedkubenode
+  become: yes
+  become_user: root
+  tasks:
+  - name: Copy join command from Ansiblehost to the worker nodes.
+    copy:
+      src: /tmp/kubernetes_join_command
+      dest: /tmp/kubernetes_join_command
+      mode: 0777
+  - name: Join the Worker nodes to the cluster.
+    command: bash /tmp/kubernetes_join_command
+    register: join_status
+  - name: Print the join status
+    debug: msg="{{ join_status}}"

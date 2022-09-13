@@ -1,0 +1,4 @@
+- name: linux install all updates
+  dnf:
+    name: "*"
+    state: latest

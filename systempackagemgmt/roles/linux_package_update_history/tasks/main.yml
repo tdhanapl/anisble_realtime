@@ -1,0 +1,6 @@
+- name: get package update history
+  shell: dnf history list
+  register: dnfhistory_output
+
+- name: print package update history
+  debug: msg="{{ dnfhistory_output.stdout_lines }}" 

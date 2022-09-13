@@ -1,0 +1,7 @@
+---
+- name: system crontab management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_create_cronjob_entry'}

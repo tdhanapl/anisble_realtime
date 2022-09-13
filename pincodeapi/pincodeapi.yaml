@@ -1,0 +1,30 @@
+---
+- hosts: stack
+  remote_user: admin
+  vars_files:
+    - apikey.yaml
+  tasks:
+    - name: Create a directory
+      file:
+        path: /home/admin/pythonapiapp
+        state: directory
+        owner: admin
+        group: admin
+    - name: Copy the Python script
+      copy:
+        src: /home/admin/ansibleexample/pincodeapi/pincodedetails.py
+        dest: /home/admin/pythonapiapp/
+        mode: 0755
+    - name: Install Python pip package
+      yum: name=pip state=latest
+      become: true
+    - name: Install Python requests module
+      command: python3 -m pip install requests --user
+    - name: Execute the Python script
+      command: /home/admin/pythonapiapp/pincodedetails.py "{{ api_key }}"
+
+      register: apidata
+    - name: Print the apidata
+      debug: msg="{{ apidata.stdout }}"
+
+

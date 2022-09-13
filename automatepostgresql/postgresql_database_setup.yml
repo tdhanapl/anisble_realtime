@@ -1,0 +1,11 @@
+---
+- name: Postgre SQL database setup
+  hosts: all
+  become: true
+  become_user: root
+  roles:
+    - common_postgres
+    - install_postgres
+    - create_postgresql_db
+#    - query_postgresql_db
+    - { role: 'query_postgresql_db', become: true, become_user: admin } 

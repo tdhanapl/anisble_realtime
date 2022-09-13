@@ -1,0 +1,5 @@
+---
+- name: system security management
+  hosts: sandbox
+  roles:
+  - {role: 'linux_get_system_crypto_policy'}

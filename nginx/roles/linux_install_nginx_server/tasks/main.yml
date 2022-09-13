@@ -1,0 +1,10 @@
+- name: install nginx service
+  dnf:
+    name: nginx
+    state: present
+
+- name: ensure nginx service is enabled and running
+  service: 
+    name: nginx 
+    state: started 
+    enabled: yes

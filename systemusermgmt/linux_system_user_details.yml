@@ -1,0 +1,7 @@
+---
+- name: linux user password age
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_system_user_details'}

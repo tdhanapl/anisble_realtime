@@ -1,0 +1,11 @@
+---
+- name: elasticsearch management
+  hosts: sandbox
+  become: true
+  become_user: root
+  roles:
+  - {role: 'linux_elasticsearch_stop_server'}
+  - {role: 'linux_elasticsearch_config_backup'}
+  - {role: 'linux_elasticsearch_config_update'}
+  - {role: 'linux_elasticsearch_start_server'}
+  - {role: 'linux_elasticsearch_service_status'}

@@ -1,0 +1,6 @@
+- name: check apache service status
+  service_facts:
+
+- name: print apache service status
+  debug:
+    var: ansible_facts.services['httpd.service']['state']

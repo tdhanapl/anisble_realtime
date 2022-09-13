@@ -1,0 +1,12 @@
+- name: ensure backup directory present
+  file: 
+    path: "{{ nginx_config_backup }}"
+    state: directory
+    mode: '0755'
+
+- name: ensure nginx config backup
+  shell: rsync -r "{{ nginx_config }}" "{{ nginx_config_backup }}"
+
+- name: ensure backup compressed
+  shell: cd "{{ nginx_config_backup }}"; tar -czvf "{{ nginx_config_backup }}"/nginx_$(date +%F_%H_%M_%Z).tar.gz nginx
+
