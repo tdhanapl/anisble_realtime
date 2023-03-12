@@ -4,7 +4,7 @@ echo "Home Directory : $HOME"
 user=`echo $HOME | awk -F"/" '{print $NF}'`
 echo $user
 nodes=("fedkubemaster" "fedkubenode")
-#nodes=("fedser35")
+#nodes=("fedser35") nodes means hostname of remote server
 
 copypublickey()
 {

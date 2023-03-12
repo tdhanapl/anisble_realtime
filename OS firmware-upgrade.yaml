@@ -1,0 +1,179 @@
+---
+- name: OS and Firmware-upgrade steps
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Getting the Yum Server name 
+      shell: cat /etc/yum.repos.d/public-yum-el*.repo | grep -i baseurl | cut -d '/' -f3 | head -1
+      register: yum_server
+
+    - name: Removing Existing repo files
+      shell: rm -fr /etc/yum.repos.d/*.repo
+
+    - name: Restarting  IMM 
+      shell: ipmitool mc reset cold
+      ignore_errors: True
+    
+    - name: Getting the hosttype value
+      shell: grep hosttype /etc/facter/facts.d/* | awk -F ":" '{print $NF}' | tr -d ' '
+      register: hosttype
+
+    - name: Getting the sitetype value
+      shell: grep site_type /etc/facter/facts.d/* | awk -F ":" '{print $NF}' | tr -d ' '
+      register: sitetype
+
+    - name: Getting the Server Model 
+      shell: dmidecode -t1 | grep "Product Name" | cut -d':' -f2 | cut -d'-' -f1 | sed 's/^[ \t]//;s/[ \t]$//'
+      register: modelnumber
+
+
+    - name: Stoping serviced service 
+      service:
+        name: serviced
+        state: stopped
+      when: hosttype.stdout|lower == "admin"
+      ignore_errors: True
+  
+    - name: Creating el79 repo
+      template:
+        src: public-yum-el79.repo.j2
+        dest: /etc/yum.repos.d/public-yum-el79.repo
+      #when: ansible_distribution_major_version == "7" and ansible_distribution_version == "7.8"
+    
+    - name: Making sure spacewalk repo is set to 0
+      lineinfile:
+        path: /etc/yum/pluginconf.d/rhnplugin.conf
+        regexp: '^enabled = 1'
+        line: 'enabled = 0'
+      ignore_errors: True
+      
+    - name: Remove UEK kernel
+      yum:
+        name: "{{item}}" 
+        state: absent
+      with_items:
+        - kernel-uek-4.1.12-94.3.9.el7uek.x86_64
+        - kernel-uek-4.14.35-1844.4.5.el7uek.x86_64
+        - kernel-uek-devel-4.1.12-94.3.9.el7uek.x86_64
+        - kernel-uek-firmware-4.1.12-94.3.9.el7uek.noarch
+        - kernel-uek-*  
+      ignore_errors: True  
+ 
+     
+    - name: Install latest kernel(3.10.0-1160.80.1.0.1.el7.x86_64)
+      yum:
+        name: kernel-3.10.0-1160.80.1.0.1.el7.x86_64
+        state: present
+ 
+       
+    - name: Upgrade all packages
+      yum:
+       name: '*'
+       state: latest
+      register: upgrade
+      ignore_errors: True
+
+    - name: Upgrade all packages
+      yum:
+       name: '*'
+       state: latest
+       exclude: device-mapper-multipath* ,kpartx*
+      when: upgrade.rc != 0
+      
+
+    - name: Starting  serviced service 
+      service:
+        name: serviced
+        state: started
+      when: hosttype.stdout|lower == "admin"
+      ignore_errors: True   
+
+    - name: generate grub2 file
+      command: "{{item}}"
+      with_items:
+        - grub2-mkconfig -o /boot/grub2/grub.cfg
+        - grub2-mkconfig
+
+    - name: checking the Latest RedHat default kernel availability (3.10.0-1160.81.1.0.1.el7.x86_64)
+      shell: awk -F\' '$1=="menuentry " {print $2}' /etc/grub2.cfg  |grep -i "3.10.0-1160.81.1.0.1.el7.x86_64"
+      register: kernel_output
+      ignore_errors: True
+      
+    - name: Install latest kernel(3.10.0-1160.81.1.0.1.el7.x86_64)
+      yum:
+        name: kernel-3.10.0-1160.81.1.0.1.el7.x86_64
+        state: present
+      when: kernel_output.rc != 0
+        
+    - name: checking the latest kernel (3.10.0-1160.81.1.0.1.el7.x86_64) Boot Order
+      shell: awk -F\' '$1=="menuentry " {print $2}' /etc/grub2.cfg  |grep -i "3.10.0-1160.81.1.0.1.el7.x86_64" -n |awk -F{{':'}} '{print $1}'
+      register: boot_order
+      ignore_errors: True
+
+    - name: Increment variable
+      set_fact: number={{ boot_order.stdout | int - 1 }}
+      when: boot_order.rc == 0 
+
+    - name: modify the boot option to latest Kernel 
+      shell: grub2-set-default {{ number }}
+      when: boot_order.rc == 0
+
+    - name: Copy x3650-M5_firmware 
+      include_tasks: tasks/x3650-M5_firmware_copy.yml
+      when: modelnumber.stdout == "System x3650 M5"
+      tags: model
+
+    - name: Install OneCli rpm from a local file
+      yum:
+       name: /tmp/firmware_latest/lnvgy_utl_lxcer_onecli01u-3.4.0_rhel_x86-64.rpm
+       state: present
+      when: modelnumber.stdout == "System x3650 M5" 
+
+    - name: Copying firmware_upgrade.sh Script
+      copy:
+       src: files/firmware_upgrade.sh
+       dest: /tmp/firmware_upgrade.sh 
+       owner: root
+       group: root
+       mode: '0755'
+      when: modelnumber.stdout == "System x3650 M5"  
+    
+    - name: Execute the firmware upgrade script 
+      shell: /tmp/firmware_upgrade.sh
+      when: modelnumber.stdout == "System x3650 M5"
+
+    - name: Flushing the iptables
+      iptables:
+        flush: yes
+      register: flush_iptable  
+      #when: sitetype.stdout|lower == 'panda' and hosttype.stdout == "dcs"
+
+    - name: save iptables
+      command: service iptables save
+      #when: flush_iptable|changed  
+
+   # - name: Saving the iptables config
+    #  community.general.iptables_state:
+     #   state: saved
+      #  path: /etc/sysconfig/iptables 
+      #when: sitetype.stdout|lower == 'panda' and hosttype.stdout == "dcs"
+
+    - name: Stopping and disabling NetworkManager service
+      service:
+        name: NetworkManager
+        state: stopped
+        enabled: no
+      #when: sitetype.stdout|lower == 'panda' and hosttype.stdout == "dcs"
+      tags: networkmanager
+
+    - name: checking whether site has CTS mount
+      shell: grep -v ^# /etc/exports
+      register: nfs_output
+      ignore_errors: True
+
+    - name: Enabling NFS service
+      service:
+        enabled: yes
+        name: nfs
+        state: started
+      when: nfs_output.rc == 0
