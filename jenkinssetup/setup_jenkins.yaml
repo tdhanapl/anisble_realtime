@@ -10,6 +10,7 @@
         baseurl: http://pkg.jenkins.io/redhat
         gpgkey: https://pkg.jenkins.io/redhat/jenkins.io.key
         gpgcheck: yes
+
     - name: Ensure gpp key is imported
       rpm_key:
         state: present
