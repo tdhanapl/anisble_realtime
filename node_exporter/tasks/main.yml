@@ -1,0 +1,5 @@
+---
+# tasks file for node_exporter
+- include: create_user.yml
+- include: install_node_exporter.yml
+- include: starting_node_exporter_service.yml

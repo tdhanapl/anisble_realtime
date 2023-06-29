@@ -1,0 +1,6 @@
+---
+- name: Start Grafana service
+  service:
+    name: "{{ service }}-server"
+    state: started
+    enabled: yes

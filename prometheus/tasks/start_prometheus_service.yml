@@ -1,0 +1,7 @@
+#starting_prometheus_service.yml
+---
+- name: Start prometheus service
+  systemd: 
+    name: "{{ service }}"
+    state: started 
+    enabled: yes

@@ -1,0 +1,6 @@
+- name: create partition
+  parted: 
+    device: "{{ hard_disk_name }}"
+    number: 1
+    flags: [ lvm ]
+    state: present 

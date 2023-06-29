@@ -1,0 +1,32 @@
+#- name: Create new the Pyhsical volume and new  Volume group.
+#  lvg:
+#    pvs: "{{ new_partition }}"
+#    vg: "{{ vg_name }}"
+#    pv_options: '-Z y'
+#    force: no
+#    state: present
+ 
+- name: Create the "{{ lv_name }}" Logical Volume with exiting physical volume and volume group.
+  lvol:
+    vg: "{{ vg_name }}"
+    lv: "{{ lv_name }}"
+    size: "{{ require_lv_size }}"
+    pvs:  "{{ new_partition }}"
+    active: yes
+    force: no
+    state: present
+    
+- name: Create a "{{ fs }}" filesystem on lvm "/dev/mapper/{{ vg_name}}-{{ lv_name}}".
+  filesystem:
+    fstype: "{{ fs }}"
+    dev: "/dev/mapper/{{ vg_name }}-{{ lv_name }}"
+    force: no
+
+
+- name: Mount the created "{{ fs }}" filesystem.
+  mount:
+    path: "{{ mount_point }}"
+    src: "/dev/mapper/{{ vg_name}}-{{ lv_name}}"
+    fstype: "{{ fs }}"
+    #opts: rw,nosuid,noexec
+    state: mounted

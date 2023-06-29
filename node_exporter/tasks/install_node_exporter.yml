@@ -1,0 +1,22 @@
+- name: Download node exporter package
+  get_url:
+    url: https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_exporter-1.5.0.linux-amd64.tar.gz
+    dest: /tmp/node_exporter.tar.gz
+
+- name: Extract node_exporter package
+  unarchive:  
+    src: /tmp/node_exporter.tar.gz
+    dest: /opt/
+
+- name: Copy node_exporter binary file  to /usr/bin 
+  copy:
+    src: /opt/node_exporter-1.5.0.linux-amd64/node_exporter
+    dest: /usr/bin/
+    owner: "{{ service }}"
+    group: "{{ service }}"
+    mode: preserve
+
+- name: Copy systemd service file for node_exporter
+  copy:
+    src: node-exporter.service
+    dest: /etc/systemd/system

@@ -1,0 +1,9 @@
+---
+# vars file for lvm
+hard_disk_name: /dev/sdb
+new_partition: /dev/sdb1
+vg_name: rhel
+lv_name: anisble
+require_lv_size:  100%FREE
+fs: ext4
+mount_point: /securonix  

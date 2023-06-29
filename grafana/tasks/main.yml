@@ -1,0 +1,4 @@
+---
+# tasks file for grafana
+- include: grafana_installation.yml
+- include: starting_grafana_service.yml

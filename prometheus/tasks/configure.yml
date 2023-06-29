@@ -1,0 +1,20 @@
+#configure.yml
+---
+- name: Set folder permissions with prometheus user
+  file: 
+    path: /opt/prometheus
+    state: directory
+    owner: "{{ service }}"
+    group: "{{ service }}"
+    recurse: yes
+
+- name: Copy systemd service file for prometheus
+  copy: 
+    src: prometheus.service
+    dest: /etc/systemd/system/
+
+- name: Configure Prometheus
+  copy:
+    src: prometheus.yml
+    dest: /opt/prometheus/prometheus.yml
+  notify: restart prometheus    

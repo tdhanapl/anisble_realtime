@@ -1,0 +1,6 @@
+---
+- name: Ansible Playbook for Prometheus Grafana and Nginx Reverse Proxy
+  hosts: localhost
+  become: true
+  roles:
+    - grafana

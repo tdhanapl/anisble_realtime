@@ -1,0 +1,7 @@
+ hosts: localhost 
+  become: true
+  roles:
+   - lvm
+
+  ##run command 
+  # ansible-playbook lvm_role.yml

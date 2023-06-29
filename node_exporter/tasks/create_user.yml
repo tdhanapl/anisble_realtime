@@ -1,0 +1,6 @@
+---
+- name: Create a dedicated exporter user
+  user: 
+    name: "{{ service }}"
+    comment: "node exporter user"
+    createhome: false

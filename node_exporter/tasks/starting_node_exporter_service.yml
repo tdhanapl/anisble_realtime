@@ -1,0 +1,6 @@
+---
+- name: Starting node_exporter  service
+  systemd:
+    name: "node-{{ service }}"
+    state: started 
+    enabled: yes
