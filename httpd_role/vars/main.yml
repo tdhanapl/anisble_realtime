@@ -1,0 +1,9 @@
+---
+# vars file for nginx-role 
+package_name: 
+ - httpd
+ - vsftpd  
+service_name: httpd
+index_html: /var/www/html/index.html
+starting_service: started
+restarting_service: restarted

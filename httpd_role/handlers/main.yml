@@ -1,0 +1,4 @@
+---
+# handlers file for nginx-role
+- name: Restart "{{ service_name }}"
+  service: name= "{{ package_name }}"  state= "{{ restarting_service }}"

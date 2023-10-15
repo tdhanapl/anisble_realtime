@@ -1,0 +1,21 @@
+- name: install {{ package_name}}  package
+  yum: name={{ package_name }} state=present
+
+- name: starting the {{ starting_service }} from ansible
+  service:
+   name: "{{ service_name }}"
+   state: "{{ starting_service }}"
+                     
+- name: copy the content to {{ index_html}}
+  copy:
+   content: 'the is nginx new site create with ansible'
+   dest: "{{ index_html}}"
+   notify:
+    - Restart "{{ service_name}}"
+
+- name: restarting the {{ starting_service }} from ansible
+  service:
+   name: "{{ service_name }}"
+   state: "{{ restarting_service }}"
+
+                                                     

@@ -1,0 +1,22 @@
+- name: Create a new user and add it to sudoers
+  hosts: webserver
+  become: yes
+  vars:
+    username: gani
+    password: ikt@406
+  tasks:
+    # Create the user
+    - name: Create user
+      user:
+        name: "{{ username }}"
+        password: "{{ password | password_hash('sha512') }}"
+        shell: /bin/bash
+        createhome: yes
+    # Add user to sudoers after root user
+    - name: Add user to sudoers after root user
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        line: "{{ username }} ALL=(ALL)  ALL"
+        validate: 'visudo -cf %s'
+        insertafter: "^root"

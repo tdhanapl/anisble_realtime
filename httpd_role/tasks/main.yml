@@ -1,0 +1,4 @@
+---
+# tasks file for nginx-role
+- import_tasks: install_httpd.yml
+  # import_tasks: start_app.yml
